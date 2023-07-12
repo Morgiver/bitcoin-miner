@@ -108,6 +108,8 @@ class Job:
     def start_mining(self, bm, nbr_threads=4) -> None:
         """
         Start the process of mining.
+        Every thread will take a range of integer to generate nonce in that specific range to split the work
+        between threads.
 
         Arguments:
             bm (BitcoinMiner): Actual instance of BitcoinMiner
@@ -324,7 +326,7 @@ class BitcoinMiner:
             print(self.errors[-1][1])
 
 if __name__ == '__main__':
-    bm = BitcoinMiner('bc1qs3262jusaazr2gj8dkshwgndxcaz3ku2t608ye')
+    bm = BitcoinMiner('bc1qs3262jusaazr2gj8dkshwgndxcaz3ku2t608ye') # <--- DONT FORGET TO CHANGE THE BTC ADDRESS
     bm.start()
     time.sleep(2)
     bm.subscribe()
