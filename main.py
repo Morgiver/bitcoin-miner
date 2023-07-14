@@ -3,6 +3,7 @@ Bitcoin Solo Miner
 @author Morgiver
 
 Inspired by:
+https://github.com/iceland2k14/solominer
 https://github.com/guerrerocarlos/bitcoin-miner/
 https://www.righto.com/2014/02/bitcoin-mining-hard-way-algorithms.html
 https://braiins.com/stratum-v1/docs 
@@ -98,8 +99,6 @@ class Job:
             blockheader = self.version + self.previous_hash + merkle_root + self.ntime + self.nbits + nonce + '000000800000000000000000000000000000000000000000000000000000000000000000000000000000000080020000'
             hash        = hashlib.sha256(hashlib.sha256(binascii.unhexlify(blockheader)).digest()).digest()
             hash        = binascii.hexlify(hash).decode()
-
-            self.add_nonce(self.job_id, hash, nonce)
 
             if hash < self.target:
                 self.solution_found = True
@@ -311,16 +310,16 @@ class BitcoinMiner:
         """
         Updating the screen to show information about actual job, target, extra nonce and btc address
         """
-        job_id = None
-        target = None
+        prev_hash = None
+        target    = None
 
         if len(self.jobs) > 0:
-            job_id = self.jobs[-1].job_id
-            target = self.jobs[-1].target
+            prev_hash = self.jobs[-1].previous_hash
+            target    = self.jobs[-1].target
 
         os.system('cls' if os.name == 'nt' else 'clear')
         print(f"----------------- Bitcoin Solo Miner -----------------")
-        print(f"Mining for : {self.bitcoin_address} | Last Job ID: {job_id} | Extra Nonce: {self.extra_nonce_one}")
+        print(f"Mining for : {self.bitcoin_address} | Previous Hash: {prev_hash} | Extra Nonce: {self.extra_nonce_one}")
         print(f"Actual Target : {target}")
         print(f"Last Error :")
         if len(self.errors) > 0:
