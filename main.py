@@ -241,12 +241,16 @@ class BitcoinMiner:
         self.socket.connect((SOLO_POOL_HOST, SOLO_POOL_PORT))
 
         while self.is_listening:
+            data = self.socket.recv(SOCKET_BYTES)
+
+            while not data.endswith(b'\n'):
+                data += self.socket.recv(SOCKET_BYTES)
+
             try:
-                data = self.socket.recv(SOCKET_BYTES)
                 self.handle_server_message(json.loads(data.decode().split('\n')[0]))
                 self.update_screen()
             except json.decoder.JSONDecodeError as e:
-                self.add_error(e)
+                self.add_error(e, data)
 
     def start(self) -> None:
         """
